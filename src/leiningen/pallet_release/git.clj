@@ -22,11 +22,6 @@
   (debug "git flow release start" version)
   (fail-on-error (eval/sh "git" "flow" "release" "start" version)))
 
-(defn add-release-notes-md
-  []
-  (fail-on-error (eval/sh "touch" "ReleaseNotes.md"))
-  (fail-on-error (eval/sh "git" "add" "ReleaseNotes.md")))
-
 (defn add-remote
   [remote url]
   (debug "git remote add" remote url)

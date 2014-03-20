@@ -3,13 +3,54 @@
   (:require
    [clojure.java.io :refer [file resource]]
    [clojure.string :as string :refer [trim]]
+   [fipp.edn :refer [pprint]]
    [leiningen.core.eval :as eval]
-   [leiningen.pallet-release.core :refer [fail fail-on-error]]
+   [leiningen.core.main :refer [info]]
+   [leiningen.pallet-release.core
+    :refer [deep-merge fail fail-on-error release-config]]
    [leiningen.pallet-release.git :as git]
    [leiningen.pallet-release.lein :as lein]
    [leiningen.pallet-release.travis :as travis])
   (:import
    java.io.File))
+
+(defn add-release-notes-md
+  []
+  (fail-on-error (eval/sh "touch" "ReleaseNotes.md"))
+  (git/add "ReleaseNotes.md"))
+
+(defn release-profiles [project]
+  {:dev {:plugins '[[lein-pallet-release "0.1.0"]]
+         :pallet-release (release-config project)}
+   :no-checkouts {:checkout-deps-shares ^:replace []}
+   :release {:set-version
+             {:updates [{:path "README.md" :no-snapshot true}]}}})
+
+(defn lein-init
+  "Initialise project for release"
+  [project]
+  (let [f (lein/profiles-clj-file project)
+        profiles (deep-merge
+                  (release-profiles project)
+                  (lein/read-profiles f))]
+    (info "Writing" (.getPath f))
+    (spit f
+          (binding [*print-meta* true]
+            (with-out-str (pprint (release-profiles project)))))))
+
+(defn init
+  "Initialise the project for release via travis."
+  [project [token]]
+  (when-not (and token (= 40 (count token)))
+    (fail "init expects a 40 character github token to be used to push."))
+  (git/ensure-origin)
+  (git/ensure-git-flow)
+  (add-release-notes-md)
+  (lein-init project)
+  (travis/init project token)
+  (println "Next:")
+  (println "a) Commit .travis.yml, profiles.clj and ReleaseNotes.md")
+  (println "b) Ensure that pbors has write access to the github repo"))
 
 (defn update-release-notes
   [new-version]

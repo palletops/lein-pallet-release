@@ -1,5 +1,14 @@
 (ns leiningen.pallet-release.core)
 
+(defn deep-merge
+  "Recursively merge maps."
+  [& ms]
+  (letfn [(f [a b]
+            (if (and (map? a) (map? b))
+              (deep-merge a b)
+              b))]
+    (apply merge-with f ms)))
+
 (defn fail
   "Fail with the given message, msg."
   [msg]
