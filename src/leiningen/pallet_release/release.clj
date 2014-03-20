@@ -53,13 +53,13 @@
   (println "b) Ensure that pbors has write access to the github repo"))
 
 (defn update-release-notes
-  [new-version]
+  [old-version new-version]
   (let [f (File/createTempFile "updateNotes" ".sh")]
     (try
       (spit
        f
        (slurp (resource "leiningen/pallet_release/update_release_notes.sh")))
-      (fail-on-error (eval/sh "bash" (.getPath f) new-version))
+      (fail-on-error (eval/sh "bash" (.getPath f) old-version new-version))
       (finally
         (if (.exists f)
           (.delete f))))))
@@ -72,7 +72,7 @@
   (lein/test project)
   (travis/enable project)
   (git/release-start new-version)
-  (update-release-notes new-version)
+  (update-release-notes old-version new-version)
   (lein/update-versions project old-version new-version)
   (spit ".pallet-release" new-version)
   (println
@@ -83,7 +83,6 @@
   [project [old-version new-version]]
   (when-not (and old-version new-version)
     (fail "start must be called with previous and new release versions."))
-
   (do-start project old-version new-version))
 
 (defn new-version

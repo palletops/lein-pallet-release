@@ -1,4 +1,6 @@
-version=$1
+previous_version=$1
+version=$2
+export previous_version
 
 function log-without () {
     export previous_version
