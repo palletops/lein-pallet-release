@@ -27,7 +27,7 @@
   [])
 
 (defn release-profiles [project]
-  {:dev {:plugins '[[lein-pallet-release "0.1.0-SNAPSHOT"]]
+  {:dev {:plugins '[[lein-pallet-release "0.1.0"]]
          :pallet-release (travis/release-config project)}
    :no-checkouts {:checkout-deps-shares ^:replace []}
    :release {:set-version
