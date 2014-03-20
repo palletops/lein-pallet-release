@@ -4,6 +4,11 @@
 
 A Leiningen plugin to release PalletOps projects.
 
+Releases are made by creating a local release branch which is pushed
+to github.  The branch will be built by travis, and pushed to master
+and develop if it succeeds.  Jars are then built locally from master
+and pushed to clojars.
+
 ## Usage
 
 Add the plugin to your `:user` `:dependencies` in `~/.lein/profiles.clj`:
@@ -11,13 +16,16 @@ Add the plugin to your `:user` `:dependencies` in `~/.lein/profiles.clj`:
 ```clj
 :dependencies [[lein-pallet-release "0.1.0"]]
 ```
+Install the
+[travis command line](http://blog.travis-ci.com/2013-01-14-new-client/).
 
 ### init
 
 The `init` subcommand is used to initialise a project for releasing
 with a test on travis.  It requires a single argument, a 40 digit hex
-github key, that will be used to authorise travis to push to github
-master if the build succeeds.
+github key for the `pbors` github user, that will be used to authorise
+travis to push to github master if the build succeeds.  The key should
+only have permissions to read and write repositories.
 
 ```
 lein pallet-release init 435afe787ab878c32432435afe787ab878c32432
@@ -28,15 +36,9 @@ add the plugin and configuration to `profiles.clj`.
 
 After running the command, inspect the created files and commit them.
 
-You need to ensure the `pbors` github user has permissions on the repository.
-
-Assumes that the
-[travis command line](http://blog.travis-ci.com/2013-01-14-new-client/)
-is installed.
-
 ### start
 
-To start a release, run
+To start a release, run:
 
 ```
 lein pallet-release start previous-release new-release
@@ -50,15 +52,17 @@ commited by the `finish` command.
 
 ### finish
 
-To finish a release, run
+To finish a release, run:
 
 ```
 lein pallet-release finish
 ```
 
-This will commit any staged files with a commit message including the version number.
+This will commit `project.clj`, `ReleaseNotes.md`, `README.md` and any
+staged files with a commit message including the version number.
 
-It then pushes the branch to github, from where travis will build it.
+It then pushes the branch to github, from where travis will build it,
+and push it back to the `master` and `develop` branches on github.
 
 ### publish
 
@@ -67,6 +71,9 @@ When the travis build has successfully completed, publish the jars with:
 ```
 lein pallet-release publish
 ```
+
+This will pull master from github and use your locally setup for
+publishing signed jars.
 
 ## License
 
