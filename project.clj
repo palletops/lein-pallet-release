@@ -1,4 +1,4 @@
-(defproject lein-pallet-release "0.1.1-SNAPSHOT"
+(defproject lein-pallet-release "0.1.1"
   :description "FIXME: write description"
   :url "http://github.com/palletops/lein-pallet-release"
   :license {:name "Eclipse Public License"
