@@ -106,7 +106,8 @@
       (debug "push to url" url))
     (print-filtered gh-token (git/add-remote "github" url))
     (print-filtered gh-token (git/push "github" (str "HEAD:" branch)))
-    (print-filtered gh-token (git/tag (git/current-branch)))
+    (print-filtered gh-token (git/tag (string/replace
+                                       (git/current-branch) "release/" "")))
     (print-filtered gh-token (git/push "github" "--tags"))
     (set-next-version project)
     (git/config {"user.email" "hugo@palletops.com"
