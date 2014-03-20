@@ -11,10 +11,10 @@ and pushed to clojars.
 
 ## Usage
 
-Add the plugin to your `:user` `:dependencies` in `~/.lein/profiles.clj`:
+Add the plugin to your `:user` `:plugins` in `~/.lein/profiles.clj`:
 
 ```clj
-:dependencies [[lein-pallet-release "0.1.0"]]
+:plugins [[lein-pallet-release "0.1.0"]]
 ```
 Install the
 [travis command line](http://blog.travis-ci.com/2013-01-14-new-client/).
