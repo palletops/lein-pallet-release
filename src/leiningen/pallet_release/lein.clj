@@ -4,8 +4,8 @@
    [clojure.edn :as edn]
    [clojure.java.io :refer [file]]
    [fipp.edn :refer [pprint]]
-   [leiningen.core.main :refer [debug info]]
-   [leiningen.pallet-release.travis :as travis])
+   [leiningen.core.main :refer [apply-task debug info]]
+   [leiningen.pallet-release.core :refer [release-config]])
   (:import
    java.io.File))
 
@@ -18,17 +18,9 @@
               b))]
     (apply merge-with f ms)))
 
-(defn ensure-alias
-  "Ensure a release alias in project.clj"
-  [])
-
-(defn ensure-plugins
-  "Ensure a release alias in project.clj"
-  [])
-
 (defn release-profiles [project]
   {:dev {:plugins '[[lein-pallet-release "0.1.0"]]
-         :pallet-release (travis/release-config project)}
+         :pallet-release (release-config project)}
    :no-checkouts {:checkout-deps-shares ^:replace []}
    :release {:set-version
              {:updates [{:path "README.md" :no-snapshot true}]}}})
@@ -55,3 +47,31 @@
     (spit (profiles-clj-file project)
           (binding [*print-meta* true]
             (with-out-str (pprint (release-profiles project)))))))
+
+(defn clean
+  [project]
+  (apply-task "clean" project []))
+
+(defn test
+  [project]
+  (apply-task "with-profile" project ["+no-checkouts" "test"]))
+
+(defn update-versions
+  [project old-version new-version]
+  (apply-task "with-profile" project
+              ["+release" "set-version"
+               new-version ":previous-version" old-version]))
+
+(defn update-versions
+  [project old-version new-version]
+  (apply-task "with-profile" project
+              ["+release" "set-version"
+               new-version ":previous-version" old-version]))
+
+(defn set-next-version
+  [project]
+  (apply-task "with-profile" project ["+release" "set-version" ":point"]))
+
+(defn deploy
+  [project]
+  (apply-task "deploy" project ["clojars"]))

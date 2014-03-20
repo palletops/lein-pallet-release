@@ -3,9 +3,10 @@
    [clojure.string :as string :refer [blank?]]
    [clojure.java.io :refer [file resource]]
    [leiningen.core.eval :as eval]
-   [leiningen.core.main :refer [apply-task debug info]]
-   [leiningen.pallet-release.core :refer [fail fail-on-error]]
-   [leiningen.pallet-release.git :as git])
+   [leiningen.core.main :refer [debug info]]
+   [leiningen.pallet-release.core :refer [fail fail-on-error repo-coordinates]]
+   [leiningen.pallet-release.git :as git]
+   [leiningen.pallet-release.lein :as lein])
   (:import
    java.io.File))
 
@@ -14,28 +15,6 @@
   [project]
   {:pre [(map? project) (:root project)]}
   (file (:root project) ".travis.yml"))
-
-(def push-repo-fmt
-  "https://pbors:${GH_TOKEN}@github.com%s.git")
-
-(defn repo-coordinates
-  [{:keys [url] :as project}]
-  (when-not (or url (-> project :pallet-release :url))
-    (fail "No :url available in project.clj"))
-  (if-let [release-url (-> project :pallet-release :url)]
-    release-url
-    (let [u (java.net.URL. url)]
-      (if (= "github.com" (.getHost u))
-        (format push-repo-fmt (.getPath u))
-        (fail (str "Don't know how to create a pushable git url from"
-                   url))))))
-
-(defn release-config
-  "Return a pallet release configuration map"
-  [project]
-  {:url (repo-coordinates project)
-   :branch (or (-> project :pallet-release :branch)
-               "master")})
 
 (defn create-travis-yml
   "Write the .travis.yml file."
@@ -92,10 +71,6 @@
            (binding [*out* out#]
              (println (filter-string (str s#) ~secret))))))))
 
-(defn set-next-version
-  [project]
-  (apply-task "set-version" project [":point"]))
-
 (defn do-push
   "Push current HEAD to url branch, substituting values from env in url."
   [project {:keys [url branch]} gh-token]
@@ -109,7 +84,7 @@
     (print-filtered gh-token (git/tag (string/replace
                                        (git/current-branch) "release/" "")))
     (print-filtered gh-token (git/push "github" "--tags"))
-    (set-next-version project)
+    (lein/set-next-version project)
     (git/config {"user.email" "hugo@palletops.com"
                  "user.name" "Hugo Duncan"})
     (git/add "-u")

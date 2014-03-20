@@ -16,6 +16,10 @@
     (when (blank? m)
       (fail-on-error (eval/sh "git" "flow" "init" "-d")))))
 
+(defn release-start
+  [version]
+  (fail-on-error (eval/sh "git" "flow" "release" "start" version)))
+
 (defn add-release-notes-md
   []
   (fail-on-error (eval/sh "touch" "ReleaseNotes.md"))
@@ -40,6 +44,14 @@
 (defn push
   [remote branch-spec]
   (fail-on-error (eval/sh "git" "push" remote branch-spec)))
+
+(defn checkout
+  [refspec]
+  (fail-on-error (eval/sh "git" "checkout" refspec)))
+
+(defn pull
+  []
+  (fail-on-error (eval/sh "git" "pull")))
 
 (defn current-branch
   []
