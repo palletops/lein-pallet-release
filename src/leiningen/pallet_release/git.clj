@@ -1,4 +1,5 @@
 (ns leiningen.pallet-release.git
+  (:refer-clojure :exclude [merge])
   (:require
    [clojure.string :as string :refer [blank? trim]]
    [leiningen.core.eval :as eval]
@@ -48,20 +49,35 @@
   (fail-on-error (eval/sh "git" "push" remote branch-spec)))
 
 (defn checkout
-  [refspec]
-  (debug "git checkout" refspec)
-  (fail-on-error (eval/sh "git" "checkout" refspec)))
+  [& args]
+  (apply debug "git checkout" args)
+  (fail-on-error (apply eval/sh "git" "checkout" args)))
 
 (defn pull
   []
   (debug "git pull")
   (fail-on-error (eval/sh "git" "pull")))
 
+(defn fetch
+  [& args]
+  (apply debug "git fetch" args)
+  (fail-on-error (apply eval/sh "git" "fetch" args)))
+
+(defn merge
+  [& args]
+  (apply debug "git merge" args)
+  (fail-on-error (apply eval/sh "git" "merge" args)))
+
+(defn current-sha
+  []
+  (debug "git rev-parse HEAD")
+  (trim (with-out-str (fail-on-error
+                       (eval/sh "git" "rev-parse" "HEAD")))))
+
 (defn current-branch
   []
   (debug "git current-branch")
-  (let [sha (trim (with-out-str (fail-on-error
-                                 (eval/sh "git" "rev-parse" "HEAD"))))
+  (let [sha (current-sha)
         out (with-out-str (fail-on-error
                            (eval/sh "git" "branch" "-v" "--no-abbrev")))
         line (->> out

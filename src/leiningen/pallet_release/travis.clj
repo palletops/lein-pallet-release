@@ -76,17 +76,30 @@
   [project {:keys [url branch]} gh-token]
   {:pre [url branch]}
   (let [env {:GH_TOKEN gh-token}
-        url (reduce-kv #(string/replace % (str "${" (name %2) "}") %3) url env)]
+        url (reduce-kv #(string/replace % (str "${" (name %2) "}") %3) url env)
+        sha (git/current-sha)
+        release-branch (git/current-branch)
+        tag (string/replace release-branch "release/" "")
+        merge-msg (str "Merge " release-branch)]
     (if-not (blank? (System/getenv "PALLET_SHOW_CREDENTIALS"))
       (debug "push to url" url))
+
     (print-filtered gh-token (git/add-remote "github" url))
-    (print-filtered gh-token (git/push "github" (str "HEAD:" branch)))
-    (print-filtered gh-token (git/tag (string/replace
-                                       (git/current-branch) "release/" "")))
-    (print-filtered gh-token (git/push "github" "--tags"))
-    (lein/set-next-version project)
     (git/config {"user.email" "hugo@palletops.com"
                  "user.name" "Hugo Duncan"})
+
+    (git/tag "-a" "-m" (str "Release " tag) tag)
+
+    ;; merge to master
+    (git/fetch "origin" branch)
+    (git/checkout "-b" "master" "FETCH_HEAD")
+    (git/merge "-m" merge-msg tag)
+    (print-filtered gh-token (git/push "github" (str "HEAD:" branch)))
+    (print-filtered gh-token (git/push "github" "--tags"))
+
+    ;; push to develop
+    (git/checkout tag)
+    (lein/set-next-version project)
     (git/add "-u")
     (git/commit "Updated version for next release cycle")
     (print-filtered gh-token (git/push "github" "HEAD:develop"))))

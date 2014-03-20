@@ -1,3 +1,7 @@
+## 0.1.3
+
+- Merge to master, rather than fastforward
+
 ## 0.1.2
 
 - Only push repositories on release/ branches
