@@ -94,7 +94,8 @@
 (defn push
   "Push a PalletOps project from travis"
   [project args]
-  (when-not (every? (:pallet-release project) [:url :branch])
-    (fail "project.clj fails to specify :url and :branch in :pallet-release"))
-  (let [gh-token (System/getenv "GH_TOKEN")]
-    (do-push project (:pallet-release project) gh-token)))
+  (when (.startsWith (git/current-branch) "release/")
+    (when-not (every? (:pallet-release project) [:url :branch])
+      (fail "project.clj fails to specify :url and :branch in :pallet-release"))
+    (let [gh-token (System/getenv "GH_TOKEN")]
+      (do-push project (:pallet-release project) gh-token))))
