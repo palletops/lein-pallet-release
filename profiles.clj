@@ -1,6 +1,7 @@
-{:dev {:plugins [[lein-pallet-release "0.1.0-SNAPSHOT"]],
-       :pallet-release {:url "https://pbors:${GH_TOKEN}@github.com/palletops/lein-pallet-release.git",
-                        :branch "master"}},
+{:dev
+ {:pallet-release
+  {:url "https://pbors:${GH_TOKEN}@github.com/palletops/lein-pallet-release.git",
+   :branch "master"}},
  :no-checkouts {:checkout-deps-shares ^{:replace true} []},
  :release {:set-version
            {:updates
