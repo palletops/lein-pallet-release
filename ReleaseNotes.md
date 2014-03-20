@@ -1,3 +1,11 @@
+## 0.1.2
+
+- Only push repositories on release/ branches
+  If travis is building anything other than a release/ branch, it
+  shouldn't push the repo.
+
+- Set :description in project.clj
+
 ## 0.1.1
 
 - Fix update-release-notes
@@ -15,7 +23,7 @@
   Put all git and lein commands into their respective namespaces.
 
 - Make finish commit any modified files
-  This is so that any modified files, e.g. source files modified by the 
+  This is so that any modified files, e.g. source files modified by the
   set-version plugin, are committed.
 
 - Fix tag name for release
@@ -23,11 +31,6 @@
 
 - Fix install instructions
 
-- Improve readme
-
-- Update README
-
 ## 0.1.0
 
-- Add travis and release files
-
+- Initial release
