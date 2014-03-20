@@ -47,7 +47,7 @@ lein pallet-release start previous-release new-release
 This will create a release branch, enable the project on travis, and
 update release notes, readme, etc.
 
-After running, check the modifications.  Anything staged will be
+After running, check the modifications.  Anything modified will be
 commited by the `finish` command.
 
 ### finish
@@ -58,8 +58,8 @@ To finish a release, run:
 lein pallet-release finish
 ```
 
-This will commit `project.clj`, `ReleaseNotes.md`, `README.md` and any
-staged files with a commit message including the version number.
+This will commit any modified files (eg. README.md, project.clj, etc)
+with a commit message including the version number.
 
 It then pushes the branch to github, from where travis will build it,
 and push it back to the `master` and `develop` branches on github.

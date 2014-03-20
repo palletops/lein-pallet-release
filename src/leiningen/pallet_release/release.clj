@@ -6,6 +6,7 @@
    [leiningen.core.eval :as eval]
    [leiningen.core.main :refer [apply-task]]
    [leiningen.pallet-release.core :refer [fail fail-on-error]]
+   [leiningen.pallet-release.git :as git]
    [leiningen.pallet-release.travis :as travis])
   (:import
    java.io.File))
@@ -67,12 +68,9 @@
 
 (defn commit-release-files
   [new-version]
-  (fail-on-error
-   (eval/sh "git" "add" "project.clj" "ReleaseNotes.md" "README.md"))
-  (fail-on-error
-   (eval/sh "git" "commit" "-m"
-            (str "\"Updated project.clj, release notes and readme for "
-                 new-version "\""))))
+  (git/add "-u")
+  (git/commit
+   (str "Updated project.clj, release notes and readme for " new-version)))
 
 (defn push-release-branch
   []

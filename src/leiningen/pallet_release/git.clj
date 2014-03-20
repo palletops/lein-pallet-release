@@ -35,7 +35,7 @@
 
 (defn commit
   [msg]
-  (fail-on-error (eval/sh "git" "commit" "-m" (str "\"" msg "\""))))
+  (fail-on-error (eval/sh "git" "commit" "-m" msg)))
 
 (defn push
   [remote branch-spec]
