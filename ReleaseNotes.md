@@ -1,3 +1,15 @@
+## 0.1.4
+
+- Improve release start output
+
+- Show release notes on release start
+
+- Annotate release tag with release notes
+
+- Suppress git flow release start output
+
+- Add space to unknown repo format message
+
 ## 0.1.3
 
 - Merge to master, rather than fastforward
