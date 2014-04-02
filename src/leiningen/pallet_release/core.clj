@@ -33,7 +33,7 @@
     (let [u (java.net.URL. url)]
       (if (= "github.com" (.getHost u))
         (format push-repo-fmt (.getPath u))
-        (fail (str "Don't know how to create a pushable git url from"
+        (fail (str "Don't know how to create a pushable git url from "
                    url))))))
 
 (defn release-config
