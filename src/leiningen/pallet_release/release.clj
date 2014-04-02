@@ -7,7 +7,7 @@
    [leiningen.core.eval :as eval]
    [leiningen.core.main :refer [info]]
    [leiningen.pallet-release.core
-    :refer [deep-merge fail fail-on-error release-config]]
+    :refer [deep-merge fail fail-on-error release-config release-notes]]
    [leiningen.pallet-release.git :as git]
    [leiningen.pallet-release.lein :as lein]
    [leiningen.pallet-release.travis :as travis])
@@ -75,8 +75,9 @@
   (update-release-notes old-version new-version)
   (lein/update-versions project old-version new-version)
   (spit ".pallet-release" new-version)
+  (println (release-notes new-version))
   (println
-   "Check project.clj, ReleaseNotes and README (finish will commit these)"))
+   "\nCheck project.clj, ReleaseNotes and README (finish will commit these)"))
 
 (defn start
   "Start releasing a PalletOps project"
