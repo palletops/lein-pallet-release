@@ -70,11 +70,15 @@
   {:pre [(map? project)]}
   (lein/clean project)
   (lein/test project)
+  (println)
+  (print "travis… ")
   (travis/enable project)
+  (println)
   (git/release-start new-version)
   (update-release-notes old-version new-version)
   (lein/update-versions project old-version new-version)
   (spit ".pallet-release" new-version)
+  (println)
   (println (release-notes new-version))
   (println
    "\nCheck project.clj, ReleaseNotes and README (finish will commit these)"))
