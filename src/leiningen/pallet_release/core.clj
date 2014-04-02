@@ -1,4 +1,6 @@
-(ns leiningen.pallet-release.core)
+(ns leiningen.pallet-release.core
+  (:require
+   [clojure.string :as string :refer [trim]]))
 
 (defn deep-merge
   "Recursively merge maps."
@@ -33,7 +35,7 @@
     (let [u (java.net.URL. url)]
       (if (= "github.com" (.getHost u))
         (format push-repo-fmt (.getPath u))
-        (fail (str "Don't know how to create a pushable git url from"
+        (fail (str "Don't know how to create a pushable git url from "
                    url))))))
 
 (defn release-config
@@ -42,3 +44,16 @@
   {:url (repo-coordinates project)
    :branch (or (-> project :pallet-release :branch)
                "master")})
+
+
+(defn release-notes [version]
+  (let [re1 (re-pattern (str
+                         "#+ "
+                         version
+                         "\n(?:\n+[^#\n]+[^\n]+)+"))
+        re2 (re-pattern (str "(?s)#+ "
+                             version
+                             "\n+(.*)"))
+        notes (re-find re1 (slurp "ReleaseNotes.md"))
+        notes (second (re-find re2 notes))]
+    (trim notes)))

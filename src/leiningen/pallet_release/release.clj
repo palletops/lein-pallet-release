@@ -7,7 +7,7 @@
    [leiningen.core.eval :as eval]
    [leiningen.core.main :refer [info]]
    [leiningen.pallet-release.core
-    :refer [deep-merge fail fail-on-error release-config]]
+    :refer [deep-merge fail fail-on-error release-config release-notes]]
    [leiningen.pallet-release.git :as git]
    [leiningen.pallet-release.lein :as lein]
    [leiningen.pallet-release.travis :as travis])
@@ -20,7 +20,7 @@
   (git/add "ReleaseNotes.md"))
 
 (defn release-profiles [project]
-  {:dev {:plugins '[[lein-pallet-release "0.1.3"]]
+  {:dev {:plugins '[[lein-pallet-release "0.1.4"]]
          :pallet-release (release-config project)}
    :no-checkouts {:checkout-deps-shares ^:replace []}
    :release {:set-version
@@ -70,13 +70,18 @@
   {:pre [(map? project)]}
   (lein/clean project)
   (lein/test project)
+  (println)
+  (print "travis… ")
   (travis/enable project)
+  (println)
   (git/release-start new-version)
   (update-release-notes old-version new-version)
   (lein/update-versions project old-version new-version)
   (spit ".pallet-release" new-version)
+  (println)
+  (println (release-notes new-version))
   (println
-   "Check project.clj, ReleaseNotes and README (finish will commit these)"))
+   "\nCheck project.clj, ReleaseNotes and README (finish will commit these)"))
 
 (defn start
   "Start releasing a PalletOps project"

@@ -21,7 +21,8 @@
 (defn release-start
   [version]
   (debug "git flow release start" version)
-  (fail-on-error (eval/sh "git" "flow" "release" "start" version)))
+  (with-out-str                         ; suppress output
+    (fail-on-error (eval/sh "git" "flow" "release" "start" version))))
 
 (defn add-remote
   [remote url]

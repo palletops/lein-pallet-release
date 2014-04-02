@@ -4,7 +4,8 @@
    [clojure.java.io :refer [file resource]]
    [leiningen.core.eval :as eval]
    [leiningen.core.main :refer [debug info]]
-   [leiningen.pallet-release.core :refer [fail fail-on-error repo-coordinates]]
+   [leiningen.pallet-release.core
+    :refer [fail fail-on-error repo-coordinates release-notes]]
    [leiningen.pallet-release.git :as git]
    [leiningen.pallet-release.lein :as lein])
   (:import
@@ -88,7 +89,7 @@
     (git/config {"user.email" "hugo@palletops.com"
                  "user.name" "Hugo Duncan"})
 
-    (git/tag "-a" "-m" (str "Release " tag) tag)
+    (git/tag "-a" "-m" (str "Release " tag) "-m" (release-notes tag) tag)
 
     ;; merge to master
     (git/fetch "origin" branch)
