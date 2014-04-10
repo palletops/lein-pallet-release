@@ -1,3 +1,10 @@
+## 0.1.6
+
+- Fix profiles.clj merging
+  Closes #4
+
+- Add :release, :no-checkouts profiles in middleware
+
 ## 0.1.5
 
 - Add support for projects using lein-modules

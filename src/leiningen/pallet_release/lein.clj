@@ -4,7 +4,7 @@
   (:require
    [clojure.edn :as edn]
    [clojure.java.io :refer [file]]
-   [leiningen.core.main :refer [apply-task debug]])
+   [leiningen.core.main :refer [apply-task debug info]])
   (:import
    java.io.File))
 

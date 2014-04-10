@@ -20,11 +20,8 @@
   (git/add "ReleaseNotes.md"))
 
 (defn release-profiles [project]
-  {:dev {:plugins '[[lein-pallet-release "0.1.5"]]
-         :pallet-release (release-config project)}
-   :no-checkouts {:checkout-deps-shares ^:replace []}
-   :release {:set-version
-             {:updates [{:path "README.md" :no-snapshot true}]}}})
+  {:dev {:plugins '[[lein-pallet-release "0.1.6"]]
+         :pallet-release (release-config project)}})
 
 (defn lein-init
   "Initialise project for release"
@@ -36,7 +33,7 @@
     (info "Writing" (.getPath f))
     (spit f
           (binding [*print-meta* true]
-            (with-out-str (pprint (release-profiles project)))))))
+            (with-out-str (pprint profiles))))))
 
 (defn init
   "Initialise the project for release via travis."

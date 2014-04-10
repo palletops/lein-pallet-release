@@ -8,7 +8,9 @@
   (letfn [(f [a b]
             (if (and (map? a) (map? b))
               (deep-merge a b)
-              b))]
+              (if (and (vector? a) (vector? b))
+                (vec (concat a b))
+                (or b a))))]
     (apply merge-with f ms)))
 
 (defn fail
