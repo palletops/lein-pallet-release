@@ -20,7 +20,7 @@
   (git/add "ReleaseNotes.md"))
 
 (defn release-profiles [project]
-  {:dev {:plugins '[[lein-pallet-release "0.1.6"]]
+  {:dev {:plugins '[[lein-pallet-release "0.1.7-SNAPSHOT"]]
          :pallet-release (release-config project)}})
 
 (defn lein-init
