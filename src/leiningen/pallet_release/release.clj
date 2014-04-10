@@ -33,7 +33,7 @@
     (info "Writing" (.getPath f))
     (spit f
           (binding [*print-meta* true]
-            (with-out-str (pprint (release-profiles project)))))))
+            (with-out-str (pprint profiles))))))
 
 (defn init
   "Initialise the project for release via travis."
