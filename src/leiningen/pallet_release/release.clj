@@ -20,7 +20,7 @@
   (git/add "ReleaseNotes.md"))
 
 (defn release-profiles [project]
-  {:dev {:plugins '[[lein-pallet-release "0.1.5"]]
+  {:dev {:plugins '[[lein-pallet-release "0.1.6-SNAPSHOT"]]
          :pallet-release (release-config project)}
    :no-checkouts {:checkout-deps-shares ^:replace []}
    :release {:set-version
