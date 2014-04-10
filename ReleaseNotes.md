@@ -1,3 +1,8 @@
+## 0.1.5
+
+- Add support for projects using lein-modules
+  Invokes all lein targets using modules if present in the :plugins.
+
 ## 0.1.4
 
 - Improve release start output
