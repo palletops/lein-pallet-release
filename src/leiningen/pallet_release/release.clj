@@ -21,10 +21,7 @@
 
 (defn release-profiles [project]
   {:dev {:plugins '[[lein-pallet-release "0.1.6-SNAPSHOT"]]
-         :pallet-release (release-config project)}
-   :no-checkouts {:checkout-deps-shares ^:replace []}
-   :release {:set-version
-             {:updates [{:path "README.md" :no-snapshot true}]}}})
+         :pallet-release (release-config project)}})
 
 (defn lein-init
   "Initialise project for release"
