@@ -20,29 +20,41 @@
   (if (.exists f)
     (edn/read-string (slurp f))))
 
+(defn uses-lein-modules?
+  [project]
+  (some #(= 'lein-modules/lein-modules (first %)) (:plugins project)))
+
+(defn task
+  "Apply a task to project, using lein-modules if it is enabled."
+  [project & args]
+  (let [args (if (uses-lein-modules? project)
+               (concat ["modules"] args)
+               args)]
+    (apply-task (first args) project (rest args))))
+
 (defn clean
   [project]
   (debug "lein clean")
-  (apply-task "clean" project []))
+  (task project "clean"))
 
 (defn test
   [project]
   (debug "lein test")
-  (apply-task "with-profile" project ["+no-checkouts" "test"]))
+  (task project "with-profile" "+no-checkouts" "test"))
 
 (defn update-versions
   [project old-version new-version]
   (debug "lein set-version" new-version)
-  (apply-task "with-profile" project
-              ["+release" "set-version"
-               new-version ":previous-version" old-version]))
+  (task project "with-profile"
+        "+release" "set-version"
+        new-version ":previous-version" old-version))
 
 (defn set-next-version
   [project]
   (debug "lein set-version :point")
-  (apply-task "with-profile" project ["+release" "set-version" ":point"]))
+  (task project "with-profile" "+release" "set-version" ":point"))
 
 (defn deploy
   [project]
   (debug "lein deploy")
-  (apply-task "deploy" project ["clojars"]))
+  (task project "deploy" "clojars"))
