@@ -7,8 +7,9 @@
    [leiningen.core.eval :as eval]
    [leiningen.core.main :refer [info]]
    [leiningen.pallet-release.core
-    :refer [deep-merge fail fail-on-error release-config release-notes]]
+    :refer [deep-merge fail fail-on-error release-notes]]
    [leiningen.pallet-release.git :as git]
+   [leiningen.pallet-release.github :as github]
    [leiningen.pallet-release.lein :as lein]
    [leiningen.pallet-release.travis :as travis])
   (:import
@@ -19,16 +20,33 @@
   (fail-on-error (eval/sh "touch" "ReleaseNotes.md"))
   (git/add "ReleaseNotes.md"))
 
-(defn release-profiles [project]
-  {:dev {:plugins '[[lein-pallet-release "0.1.7-SNAPSHOT"]]
-         :pallet-release (release-config project)}})
+
+(def push-repo-fmt
+  "https://pbors:${GH_TOKEN}@github.com/%s/%s.git")
+
+(defn repo-coordinates
+  [origin]
+  (let [{:keys [login name]} (github/url->repo origin)]
+    (format push-repo-fmt login name)))
+
+(defn release-config
+  "Return a pallet release configuration map"
+  [project origin]
+  {:url (or (-> project :pallet-release :url)
+            (repo-coordinates origin))
+   :branch (or (-> project :pallet-release :branch)
+               "master")})
+
+(defn release-profiles [project origin]
+  {:dev {:plugins '[[lein-pallet-release "RELEASE"]]
+         :pallet-release (release-config project origin)}})
 
 (defn lein-init
   "Initialise project for release"
-  [project]
+  [project origin]
   (let [f (lein/profiles-clj-file project)
         profiles (deep-merge
-                  (release-profiles project)
+                  (release-profiles project origin)
                   (lein/read-profiles f))]
     (info "Writing" (.getPath f))
     (spit f
@@ -43,14 +61,19 @@
   (git/ensure-origin)
   (git/ensure-git-flow)
   (add-release-notes-md)
-  (lein-init project)
+  (let [origin (git/origin)]
+    (lein-init project origin)
+    (github/auth-builder origin (github/github-login)))
   (travis/init project token)
   (println "Next:")
-  (println "a) Commit .travis.yml, profiles.clj and ReleaseNotes.md")
-  (println "b) Ensure that pbors has write access to the github repo"))
+  (println
+   "a) Commit .travis.yml, profiles.clj and ReleaseNotes.md (unless unchanged)")
+  (println
+   "b) Ensure that pbors has write access to the github repo"))
 
 (defn update-release-notes
   [old-version new-version]
+  {:pre [old-version new-version]}
   (let [f (File/createTempFile "updateNotes" ".sh")]
     (try
       (spit
@@ -64,7 +87,7 @@
 (defn do-start
   "Start a PalletOps release"
   [project old-version new-version]
-  {:pre [(map? project)]}
+  {:pre [(map? project) old-version new-version]}
   (lein/clean project)
   (lein/test project)
   (println)

@@ -20,6 +20,9 @@
   (if (.exists f)
     (edn/read-string (slurp f))))
 
+(defn release-repo-coordinates [project]
+  (-> project :pallet-release :url))
+
 (defn uses-lein-modules?
   [project]
   (some #(= 'lein-modules/lein-modules (first %)) (:plugins project)))
