@@ -14,7 +14,7 @@ and pushed to clojars.
 Add the plugin to your `:user` `:plugins` in `~/.lein/profiles.clj`:
 
 ```clj
-:plugins [[lein-pallet-release "0.1.9"]]
+:plugins [[lein-pallet-release "0.1.10"]]
 ```
 Install the
 [travis command line](http://blog.travis-ci.com/2013-01-14-new-client/).
@@ -74,6 +74,16 @@ lein pallet-release publish
 
 This will pull master from github and use your locally setup for
 publishing signed jars.
+
+## Configuration
+
+You can specify the url and branch travis should push to on the
+`:pallet-release` key.
+
+```
+:pallet-release {:url "Url for travis to push to"
+                 :branch "master"}
+```
 
 ## License
 
