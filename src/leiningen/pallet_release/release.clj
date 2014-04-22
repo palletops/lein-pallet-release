@@ -20,20 +20,11 @@
   (fail-on-error (eval/sh "touch" "ReleaseNotes.md"))
   (git/add "ReleaseNotes.md"))
 
-
-(def push-repo-fmt
-  "https://pbors:${GH_TOKEN}@github.com/%s/%s.git")
-
-(defn repo-coordinates
-  [origin]
-  (let [{:keys [login name]} (github/url->repo origin)]
-    (format push-repo-fmt login name)))
-
 (defn release-config
   "Return a pallet release configuration map"
   [project origin]
   {:url (or (-> project :pallet-release :url)
-            (repo-coordinates origin))
+            (github/repo-coordinates origin))
    :branch (or (-> project :pallet-release :branch)
                "master")})
 
