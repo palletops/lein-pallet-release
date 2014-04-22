@@ -3,7 +3,7 @@
    [leiningen.core.project :refer [add-profiles]]))
 
 (def profiles
-  {:no-checkouts {:checkout-shares ^:replace []}
+  {:no-checkouts {:checkout-deps-shares ^:replace []}
    :release {:set-version
              {:updates [{:path "README.md" :no-snapshot true}]}}})
 
