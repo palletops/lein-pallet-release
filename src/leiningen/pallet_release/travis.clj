@@ -7,6 +7,7 @@
    [leiningen.pallet-release.core
     :refer [fail fail-on-error release-notes]]
    [leiningen.pallet-release.git :as git]
+   [leiningen.pallet-release.github :as github]
    [leiningen.pallet-release.lein :as lein])
   (:import
    java.io.File))
@@ -109,7 +110,11 @@
   "Push a PalletOps project from travis"
   [project args]
   (when (.startsWith (git/current-branch) "release/")
-    (when-not (every? (:pallet-release project) [:url :branch])
-      (fail "project.clj fails to specify :url and :branch in :pallet-release"))
-    (let [gh-token (System/getenv "GH_TOKEN")]
-      (do-push project (:pallet-release project) gh-token))))
+    (let [origin (git/origin)
+          coords (merge {:branch "master" :url (github/repo-coordinates origin)}
+                        (:pallet-release project))]
+      (when-not (every? coords [:url :branch])
+        (fail
+         "project.clj fails to specify :url and :branch in :pallet-release"))
+      (let [gh-token (System/getenv "GH_TOKEN")]
+        (do-push project coords gh-token)))))

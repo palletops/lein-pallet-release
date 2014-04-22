@@ -55,3 +55,11 @@
       (println
        "No team found for" (str login "/build-automation.")
        "Either create the build-automation team, or authorise pbors."))))
+
+(def push-repo-fmt
+  "https://pbors:${GH_TOKEN}@github.com/%s/%s.git")
+
+(defn repo-coordinates
+  [origin]
+  (let [{:keys [login name]} (url->repo origin)]
+    (format push-repo-fmt login name)))
