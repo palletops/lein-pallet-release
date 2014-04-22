@@ -1,3 +1,10 @@
+## 0.1.10
+
+- Don't write :pallet-release on init
+  The :pallet-release configuration is now optional.
+
+- Fix no-checkouts profile
+
 ## 0.1.9
 
 - Default :pallet-release push url from git origin
