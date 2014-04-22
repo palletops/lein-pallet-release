@@ -1,3 +1,11 @@
+## 0.1.9
+
+- Default :pallet-release push url from git origin
+  When pushing from travis, default the pallet-release url and branch based
+  on the git origin remote.
+
+  Closes #7
+
 ## 0.1.8
 
 - Clean before deploying jars
