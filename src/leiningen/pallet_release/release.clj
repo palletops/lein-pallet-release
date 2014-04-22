@@ -137,4 +137,5 @@
   [project args]
   (git/checkout "master")
   (git/pull)
+  (lein/clean project)
   (lein/deploy project))

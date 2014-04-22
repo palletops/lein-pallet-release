@@ -1,3 +1,7 @@
+## 0.1.8
+
+- Clean before deploying jars
+
 ## 0.1.7
 
 - Use github for repo name, and auth on init
