@@ -17,4 +17,4 @@
     "finish" (release/finish project args)
     "push" (travis/push project args)
     "publish" (release/publish project args)
-    (fail "Known cmds are init, start, finish, and push")))
+    (fail "Known cmds are init, start, finish, and publish.")))

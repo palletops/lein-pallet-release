@@ -5,7 +5,7 @@
    [leiningen.core.eval :as eval]
    [leiningen.core.main :refer [debug info]]
    [leiningen.pallet-release.core
-    :refer [fail fail-on-error repo-coordinates release-notes]]
+    :refer [fail fail-on-error release-notes]]
    [leiningen.pallet-release.git :as git]
    [leiningen.pallet-release.lein :as lein])
   (:import
@@ -21,11 +21,11 @@
   "Write the .travis.yml file."
   [project ^File f]
   {:pre [(map? project) f (not (.exists f))]}
-  (debug "Push repo coords" (repo-coordinates project))
+  (debug "Push repo coords" (lein/release-repo-coordinates project))
   (spit f
         (format
          (slurp (resource "leiningen/pallet_release/travis.yml"))
-         (repo-coordinates project))))
+         (lein/release-repo-coordinates project))))
 
 (defn enable
   "Enable travis on the project."

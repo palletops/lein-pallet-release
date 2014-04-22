@@ -1,7 +1,7 @@
 (ns leiningen.pallet-release.git
   (:refer-clojure :exclude [merge])
   (:require
-   [clojure.string :as string :refer [blank? trim]]
+   [clojure.string :as string :refer [blank? split-lines trim]]
    [leiningen.core.eval :as eval]
    [leiningen.core.main :refer [debug]]
    [leiningen.pallet-release.core :refer [fail fail-on-error]]))
@@ -28,6 +28,21 @@
   [remote url]
   (debug "git remote add" remote url)
   (fail-on-error (eval/sh "git" "remote" "add" remote url)))
+
+(defn remotes
+  []
+  (debug "git remote -v")
+  (fail-on-error (eval/sh "git" "remote" "-v")))
+
+(defn origin
+  []
+  (debug "git remote -v")
+  (->> (with-out-str (fail-on-error (eval/sh "git" "remote" "-v")))
+       split-lines
+       (filter #(re-matches #"^origin.*push.*" %))
+       first
+       (re-find #"origin\s+([^ ]+)")
+       second))
 
 (defn tag
   [& args]

@@ -2,6 +2,8 @@ previous_version=$1
 version=$2
 export previous_version
 
+echo "Updating release notes for $previous_version..$version"
+
 function log-without () {
     export previous_version
     git --no-pager log --format=%H $previous_version.. |

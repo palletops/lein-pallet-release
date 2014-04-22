@@ -1,3 +1,11 @@
+## 0.1.7
+
+- Use github for repo name, and auth on init
+  Authorise the build-automation team on init.  Use the origin repo to 
+  calculate the push repo url.
+
+- Fix list of known commands in help message
+
 ## 0.1.6
 
 - Fix profiles.clj merging
