@@ -29,8 +29,7 @@
                "master")})
 
 (defn release-profiles [project origin]
-  {:dev {:plugins '[[lein-pallet-release "RELEASE"]]
-         :pallet-release (release-config project origin)}})
+  {:dev {:plugins '[[lein-pallet-release "RELEASE"]]}})
 
 (defn lein-init
   "Initialise project for release"

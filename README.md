@@ -75,6 +75,16 @@ lein pallet-release publish
 This will pull master from github and use your locally setup for
 publishing signed jars.
 
+## Configuration
+
+You can specify the url and branch travis should push to on the
+`:pallet-release` key.
+
+```
+:pallet-release {:url "Url for travis to push to"
+                 :branch "master"}
+```
+
 ## License
 
 Copyright © 2014 Hugo Duncan, Antoni Batchelli
