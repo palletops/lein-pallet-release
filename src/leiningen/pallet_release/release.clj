@@ -82,8 +82,9 @@
   (lein/test project)
   (println)
   (git/release-start new-version)
-  (update-release-notes old-version new-version)
   (lein/update-versions project old-version new-version)
+  (lein/pom)                        ; checks for snapshot dependencies
+  (update-release-notes old-version new-version)
   (spit ".pallet-release" new-version)
   (println)
   (println (release-notes new-version))
