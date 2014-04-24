@@ -66,3 +66,8 @@
   [project]
   (debug "lein pom")
   (task project "pom"))
+
+(defn check
+  [project]
+  (debug "lein check")
+  (task project "check"))

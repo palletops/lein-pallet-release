@@ -80,6 +80,7 @@
   {:pre [(map? project) old-version new-version]}
   (lein/clean project)
   (lein/test project)
+  (lein/check project)
   (println)
   (git/release-start new-version)
   (lein/update-versions project old-version new-version)
