@@ -1,3 +1,10 @@
+## 0.1.11
+
+- Run `lein check` on release start
+  Check for compilation and reflection issues.
+
+- Add lein/pom function
+
 ## 0.1.10
 
 - Don't write :pallet-release on init
@@ -20,7 +27,7 @@
 ## 0.1.7
 
 - Use github for repo name, and auth on init
-  Authorise the build-automation team on init.  Use the origin repo to 
+  Authorise the build-automation team on init.  Use the origin repo to
   calculate the push repo url.
 
 - Fix list of known commands in help message

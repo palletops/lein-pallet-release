@@ -61,3 +61,13 @@
   [project]
   (debug "lein deploy")
   (task project "deploy" "clojars"))
+
+(defn pom
+  [project]
+  (debug "lein pom")
+  (task project "pom"))
+
+(defn check
+  [project]
+  (debug "lein check")
+  (task project "check"))
