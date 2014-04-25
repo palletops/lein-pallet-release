@@ -13,8 +13,9 @@
   [project & [cmd & args]]
   (case cmd
     "init" (release/init project args)
+    "auth" (release/auth project args)
     "start" (release/start project args)
     "finish" (release/finish project args)
     "push" (travis/push project args)
     "publish" (release/publish project args)
-    (fail "Known cmds are init, start, finish, and publish.")))
+    (fail "Known cmds are init, auth, start, finish, and publish.")))

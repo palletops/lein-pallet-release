@@ -11,7 +11,8 @@
    [leiningen.pallet-release.git :as git]
    [leiningen.pallet-release.github :as github]
    [leiningen.pallet-release.lein :as lein]
-   [leiningen.pallet-release.travis :as travis])
+   [leiningen.pallet-release.travis :as travis]
+   [leiningen.pallet-release.travis-api :as travis-api])
   (:import
    java.io.File))
 
@@ -60,6 +61,13 @@
    "a) Commit .travis.yml, profiles.clj and ReleaseNotes.md (unless unchanged)")
   (println
    "b) Ensure that pbors has write access to the github repo"))
+
+(defn auth
+  "Authorise builder on github"
+  [project _]
+  (let [origin (git/origin)]
+    (pprint (github/auth-builder origin (github/github-login)))
+    (flush)))
 
 (defn update-release-notes
   [old-version new-version]
