@@ -90,7 +90,7 @@
   (trim (with-out-str (fail-on-error
                        (eval/sh "git" "rev-parse" "HEAD")))))
 
-(defn current-branch
+(defn ^String current-branch
   []
   (debug "git current-branch")
   (let [sha (current-sha)
@@ -98,10 +98,9 @@
                            (eval/sh "git" "branch" "-v" "--no-abbrev")))
         line (->> out
                   (string/split-lines)
-                  (filter #(.contains % sha))
-                  (remove #(.contains % "detached"))
-                  first
-                  )]
+                  (filter #(.contains ^String % sha))
+                  (remove #(.contains ^String % "detached"))
+                  first)]
     (->> (string/split (string/replace line "*" "") #" +")
          (remove blank?)
          first)))

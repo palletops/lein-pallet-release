@@ -83,6 +83,7 @@
         release-branch (git/current-branch)
         tag (string/replace release-branch "release/" "")
         merge-msg (str "Merge " release-branch)]
+    (info "Tagging" release-branch "with" tag)
     (if-not (blank? (System/getenv "PALLET_SHOW_CREDENTIALS"))
       (debug "push to url" url))
 
@@ -93,13 +94,15 @@
     (git/tag "-a" "-m" (str "Release " tag) "-m" (release-notes tag) tag)
 
     ;; merge to master
+    (info "Merging" release-branch "to" branch)
     (git/fetch "origin" branch)
-    (git/checkout "-b" "master" "FETCH_HEAD")
+    (git/checkout "-b" branch "FETCH_HEAD")
     (git/merge "-m" merge-msg tag)
     (print-filtered gh-token (git/push "github" (str "HEAD:" branch)))
     (print-filtered gh-token (git/push "github" "--tags"))
 
     ;; push to develop
+    (info "Pushing" release-branch "to" "develop")
     (git/checkout tag)
     (lein/set-next-version project)
     (git/add "-u")
@@ -109,12 +112,19 @@
 (defn push
   "Push a PalletOps project from travis"
   [project args]
-  (when (.startsWith (git/current-branch) "release/")
-    (let [origin (git/origin)
-          coords (merge {:branch "master" :url (github/repo-coordinates origin)}
-                        (:pallet-release project))]
-      (when-not (every? coords [:url :branch])
-        (fail
-         "project.clj fails to specify :url and :branch in :pallet-release"))
-      (let [gh-token (System/getenv "GH_TOKEN")]
-        (do-push project coords gh-token)))))
+  (let [branch (git/current-branch)]
+    (info "Building branch" branch)
+    (lein/test project)
+    ;; (lein/check project) comment as it seems to exit the process
+    (when (.startsWith branch "release/")
+      (info "Processing release")
+      (let [origin (git/origin)
+            coords (merge
+                    {:branch "master" :url (github/repo-coordinates origin)}
+                    (:pallet-release project))]
+        (when-not (every? coords [:url :branch])
+          (fail
+           "project.clj fails to specify :url and :branch in :pallet-release"))
+        (let [gh-token (System/getenv "GH_TOKEN")]
+          (do-push project coords gh-token))))
+    (info "Push complete")))

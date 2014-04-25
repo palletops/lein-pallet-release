@@ -1,3 +1,19 @@
+## 0.1.12
+
+- Add wait command to wait on travis builds
+
+- Add :doc-base profile
+  Closes #12
+
+- Add version command
+
+- Add auth command
+  Can be used to authorise the build-automation team on travis.
+  Closes #11
+
+- Poll travis api for build status
+  Closes #13
+
 ## 0.1.11
 
 - Run `lein check` on release start

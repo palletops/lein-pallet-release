@@ -11,7 +11,8 @@
    [leiningen.pallet-release.git :as git]
    [leiningen.pallet-release.github :as github]
    [leiningen.pallet-release.lein :as lein]
-   [leiningen.pallet-release.travis :as travis])
+   [leiningen.pallet-release.travis :as travis]
+   [leiningen.pallet-release.travis-api :as travis-api])
   (:import
    java.io.File))
 
@@ -61,6 +62,13 @@
   (println
    "b) Ensure that pbors has write access to the github repo"))
 
+(defn auth
+  "Authorise builder on github"
+  [project _]
+  (let [origin (git/origin)]
+    (pprint (github/auth-builder origin (github/github-login)))
+    (flush)))
+
 (defn update-release-notes
   [old-version new-version]
   {:pre [old-version new-version]}
@@ -106,20 +114,42 @@
       (fail "No release started (use lein pallet-release start)"))
     (slurp f)))
 
+(defn wait
+  [project args]
+  (let [origin (git/origin)
+        current-branch (git/current-branch)
+        {:keys [login name]} (github/url->repo origin)]
+    (println "Waiting for travis:" current-branch)
+    (loop []
+      (let [builds (travis-api/builds-for login name current-branch)]
+        (if (and (seq builds)
+                 (every? #(= "finished" (:state %)) builds))
+          (let [r (apply max (map #(:result %) builds))]
+            (when (pos? r)
+              (throw (ex-info "Travis Build Failed"
+                              {:exit-code r}))))
+          (do
+            (print (mapv :state builds))
+            (flush)
+            (Thread/sleep 10000)
+            (recur)))))))
+
 (defn finish
   "Finish a PalletOps release"
   [project args]
-  (let [new-version (new-version)]
+  (let [new-version (new-version)
+        current-branch (git/current-branch)]
     (lein/clean project)
     (lein/test project)
     (git/add "-u")
     (git/commit
      (str "Updated project.clj, release notes and readme for " new-version))
-    (git/push "origin" (git/current-branch))
+    (git/push "origin" current-branch)
     (.delete (file ".pallet-release"))
     (println
      "Wait for travis to push to master,\n"
-     "then run `lein pallet-release publish` to publish jars")))
+     "then run `lein pallet-release publish` to publish jars")
+    (wait project args)))
 
 (defn publish
   "Publish jars from master to clojars"

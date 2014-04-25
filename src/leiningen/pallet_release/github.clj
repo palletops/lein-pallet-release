@@ -29,11 +29,11 @@
 (defn repo-matching
   "Return the repo matching the git or https url for the repo."
   [repos url]
-  (filterv #((set ((juxt :ssh_url :clone_url) %)) url) repos))
+  (first (filterv #((set ((juxt :ssh_url :clone_url) %)) url) repos)))
 
 (defn url->repo
   "Return a partial repository map from a url"
-  [url]
+  [^String url]
   (let [x (or (re-matches #"git@github.com:([^/]+)/(.+).git" url)
               (re-matches #"git://github.com/([^/]+)/(.+).git" url)
               (re-matches #"https://github.com/([^/]+)/(.+).git" url))]
@@ -50,8 +50,10 @@
         builder-id (builder-team login token)
         repos (team-repos builder-id token)]
     (if builder-id
-      (when-not (repo-matching repos url)
-        (orgs/add-team-repo builder-id login name {:auth token}))
+      (if-not (repo-matching repos url)
+        (when (orgs/add-team-repo builder-id login name {:auth token})
+          (println "Authourised"))
+        (println "Already authorised"))
       (println
        "No team found for" (str login "/build-automation.")
        "Either create the build-automation team, or authorise pbors."))))
