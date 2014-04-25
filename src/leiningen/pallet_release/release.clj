@@ -114,6 +114,26 @@
       (fail "No release started (use lein pallet-release start)"))
     (slurp f)))
 
+(defn wait
+  [project args]
+  (let [origin (git/origin)
+        current-branch (git/current-branch)
+        {:keys [login name]} (github/url->repo origin)]
+    (println "Waiting for travis:" current-branch)
+    (loop []
+      (let [builds (travis-api/builds-for login name current-branch)]
+        (if (and (seq builds)
+                 (every? #(= "finished" (:state %)) builds))
+          (let [r (apply max (map #(:result %) builds))]
+            (when (pos? r)
+              (throw (ex-info "Travis Build Failed"
+                              {:exit-code r}))))
+          (do
+            (print (mapv :state builds))
+            (flush)
+            (Thread/sleep 10000)
+            (recur)))))))
+
 (defn finish
   "Finish a PalletOps release"
   [project args]
@@ -129,18 +149,7 @@
     (println
      "Wait for travis to push to master,\n"
      "then run `lein pallet-release publish` to publish jars")
-    (let [origin (git/origin)
-          {:keys [login name]} (github/url->repo origin)]
-      (loop []
-        (let [builds (travis-api/builds-for login name current-branch)]
-          (if (and (seq builds)
-                   (every? #(= "finished" (:state %)) builds))
-            (let [r (apply max (map #(:result %) builds))]
-              (when (pos? r)
-                (throw (ex-info "Travis Build Failed"
-                                {:exit-code r}))))
-            (do (Thread/sleep 10000)
-                (recur))))))))
+    (wait project args)))
 
 (defn publish
   "Publish jars from master to clojars"

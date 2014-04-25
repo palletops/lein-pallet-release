@@ -41,8 +41,6 @@
   [s] (when s (json/parse-string s true)))
 
 (defn parse [{:keys [headers status body] :as response}]
-  (clojure.pprint/pprint response)
-  (flush)
   (if (#{400 401 204 422 403 404 500} status)
     (update-in response [:body] parse-json)
     (let [^String content-type (get headers "content-type")]

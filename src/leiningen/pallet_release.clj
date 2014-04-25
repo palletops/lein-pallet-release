@@ -26,6 +26,7 @@
     "start" (release/start project args)
     "finish" (release/finish project args)
     "push" (travis/push project args)
+    "wait" (release/wait project args)
     "publish" (release/publish project args)
     "version" (version)
     (fail "Known cmds are init, auth, start, finish, and publish.")))
