@@ -23,17 +23,18 @@
     {:no-checkouts {:checkout-deps-shares ^:replace []}
      :release {:set-version
                {:updates [{:path "README.md" :no-snapshot true}]}}
-     :doc {:dependencies '[[com.palletops/pallet-codox "0.1.0"]]
-           :plugins '[[codox/codox.leiningen "0.6.4"]
-                      [lein-marginalia "0.7.1"]]
-           :codox {:writer 'codox-md.writer/write-docs
-                   :output-dir (format "doc/%s/api" doc-v)
-                   :src-dir-uri (src-uri project)
-                   :src-linenum-anchor-prefix "L"}
-           :aliases {"marginalia" ["marg"
-                                   "-d" (format "doc/%s/annotated" doc-v)]
-                     "codox" ["doc"]
-                     "doc" ["do" "codox," "marginalia"]}}}))
+     :doc-base {:dependencies '[[com.palletops/pallet-codox "0.1.0"]]
+                :plugins '[[codox/codox.leiningen "0.6.4"]
+                           [lein-marginalia "0.7.1"]]
+                :codox {:writer 'codox-md.writer/write-docs
+                        :output-dir (format "doc/%s/api" doc-v)
+                        :src-dir-uri (src-uri project)
+                        :src-linenum-anchor-prefix "L"}
+                :aliases {"marginalia" ["marg"
+                                        "-d" (format "doc/%s/annotated" doc-v)]
+                          "codox" ["doc"]
+                          "doc" ["do" "codox," "marginalia"]}}
+     :doc [:no-checkouts :doc-base]}))
 
 (defn middleware
   "Middleware to add profiles."
