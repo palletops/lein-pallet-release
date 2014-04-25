@@ -45,7 +45,7 @@
   (flush)
   (if (#{400 401 204 422 403 404 500} status)
     (update-in response [:body] parse-json)
-    (let [content-type (get headers "content-type")]
+    (let [^String content-type (get headers "content-type")]
       (if (.contains content-type "application/json")
         (parse-json body)
         body))))

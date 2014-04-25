@@ -33,7 +33,7 @@
 
 (defn url->repo
   "Return a partial repository map from a url"
-  [url]
+  [^String url]
   (let [x (or (re-matches #"git@github.com:([^/]+)/(.+).git" url)
               (re-matches #"git://github.com/([^/]+)/(.+).git" url)
               (re-matches #"https://github.com/([^/]+)/(.+).git" url))]
