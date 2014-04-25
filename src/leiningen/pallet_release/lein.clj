@@ -4,7 +4,7 @@
   (:require
    [clojure.edn :as edn]
    [clojure.java.io :refer [file]]
-   [leiningen.core.main :refer [apply-task debug info]])
+   [leiningen.core.main :refer [apply-task debug info *exit-process?*]])
   (:import
    java.io.File))
 
@@ -70,4 +70,5 @@
 (defn check
   [project]
   (debug "lein check")
-  (task project "check"))
+  (binding [*exit-process?* false]
+    (task project "check")))

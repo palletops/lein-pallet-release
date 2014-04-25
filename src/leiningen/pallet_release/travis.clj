@@ -115,12 +115,13 @@
   (let [branch (git/current-branch)]
     (info "Building branch" branch)
     (lein/test project)
-    (lein/check project)
+    ;; (lein/check project) comment as it seems to exit the process
     (when (.startsWith branch "release/")
       (info "Processing release")
       (let [origin (git/origin)
-            coords (merge {:branch "master" :url (github/repo-coordinates origin)}
-                          (:pallet-release project))]
+            coords (merge
+                    {:branch "master" :url (github/repo-coordinates origin)}
+                    (:pallet-release project))]
         (when-not (every? coords [:url :branch])
           (fail
            "project.clj fails to specify :url and :branch in :pallet-release"))
