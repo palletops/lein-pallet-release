@@ -109,6 +109,8 @@
 (defn push
   "Push a PalletOps project from travis"
   [project args]
+  (lein/test project)
+  (lein/check project)
   (when (.startsWith (git/current-branch) "release/")
     (let [origin (git/origin)
           coords (merge {:branch "master" :url (github/repo-coordinates origin)}
