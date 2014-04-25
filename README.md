@@ -82,6 +82,7 @@ You can specify the url and branch travis should push to on the
 
 ```
 :pallet-release {:url "Url for travis to push to"
+                 :develop-branch "develop"
                  :branch "master"}
 ```
 
