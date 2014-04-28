@@ -15,7 +15,9 @@
 
 (defn doc-version
   [project]
-  (join "." (take 2 (split (:version project) #"\."))))
+  (if-let [version (:version project)]
+    (join "." (take 2 (split version #"\.")))
+    "no-version"))
 
 (defn profiles
   [project]
