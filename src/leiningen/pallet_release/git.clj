@@ -37,12 +37,13 @@
 (defn origin
   []
   (debug "git remote -v")
-  (->> (with-out-str (fail-on-error (eval/sh "git" "remote" "-v")))
-       split-lines
-       (filter #(re-matches #"^origin.*push.*" %))
-       first
-       (re-find #"origin\s+([^ ]+)")
-       second))
+  (if-let [r (->> (with-out-str (fail-on-error (eval/sh "git" "remote" "-v")))
+                  split-lines
+                  (filter #(re-matches #"^origin.*push.*" %))
+                  first)]
+    (->> r
+         (re-find #"origin\s+([^ ]+)")
+         second)))
 
 (defn tag
   [& args]
