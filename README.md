@@ -14,7 +14,7 @@ and pushed to clojars.
 Add the plugin to your `:user` `:plugins` in `~/.lein/profiles.clj`:
 
 ```clj
-:plugins [[lein-pallet-release "0.1.12"]]
+:plugins [[lein-pallet-release "0.1.13"]]
 ```
 Install the
 [travis command line](http://blog.travis-ci.com/2013-01-14-new-client/).
@@ -82,6 +82,7 @@ You can specify the url and branch travis should push to on the
 
 ```
 :pallet-release {:url "Url for travis to push to"
+                 :develop-branch "develop"
                  :branch "master"}
 ```
 

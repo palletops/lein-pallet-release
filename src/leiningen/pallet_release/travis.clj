@@ -75,7 +75,7 @@
 
 (defn do-push
   "Push current HEAD to url branch, substituting values from env in url."
-  [project {:keys [url branch]} gh-token]
+  [project {:keys [url branch develop-branch]} gh-token]
   {:pre [url branch]}
   (let [env {:GH_TOKEN gh-token}
         url (reduce-kv #(string/replace % (str "${" (name %2) "}") %3) url env)
@@ -107,7 +107,7 @@
     (lein/set-next-version project)
     (git/add "-u")
     (git/commit "Updated version for next release cycle")
-    (print-filtered gh-token (git/push "github" "HEAD:develop"))))
+    (print-filtered gh-token (git/push "github" (str "HEAD:" develop-branch)))))
 
 (defn push
   "Push a PalletOps project from travis"
@@ -120,7 +120,9 @@
       (info "Processing release")
       (let [origin (git/origin)
             coords (merge
-                    {:branch "master" :url (github/repo-coordinates origin)}
+                    {:branch "master"
+                     :develop-branch "develop"
+                     :url (github/repo-coordinates origin)}
                     (:pallet-release project))]
         (when-not (every? coords [:url :branch])
           (fail
