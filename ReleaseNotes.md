@@ -1,3 +1,14 @@
+## 0.1.13
+
+- Allow use without project.clj
+  e.g, when creating projects with lein new.
+
+- Allow specification of :develop-branch
+  Allow specification of :develop-branch in :pallet-release, so maintenance
+  branches can be released.
+
+  Closes #10
+
 ## 0.1.12
 
 - Add wait command to wait on travis builds
