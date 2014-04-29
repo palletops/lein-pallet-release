@@ -7,11 +7,11 @@
 
 (defn src-uri
   [project]
-  (let [origin (git/origin)
-        branch (git/current-branch)
-        {:keys [login name]} (github/url->repo origin)]
-    (format "https://github.com/%s/%s/blob/%s"
-            login name branch)))
+  (if-let [origin (git/origin)]
+    (let [branch (git/current-branch)
+          {:keys [login name]} (github/url->repo origin)]
+      (format "https://github.com/%s/%s/blob/%s"
+              login name branch))))
 
 (defn doc-version
   [project]
