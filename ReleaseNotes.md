@@ -1,3 +1,8 @@
+## 0.1.14
+
+- Make plugin work when there is no origin remote
+  The doc plugin no longer errors when there is no origin remote.
+
 ## 0.1.13
 
 - Allow use without project.clj
