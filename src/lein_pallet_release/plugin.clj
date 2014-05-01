@@ -7,11 +7,13 @@
 
 (defn src-uri
   [project]
-  (if-let [origin (git/origin)]
-    (let [branch (git/current-branch)
-          {:keys [login name]} (github/url->repo origin)]
-      (format "https://github.com/%s/%s/blob/%s"
-              login name branch))))
+  (try
+    (if-let [origin (git/origin)]
+      (let [branch (git/current-branch)
+            {:keys [login name]} (github/url->repo origin)]
+        (format "https://github.com/%s/%s/blob/%s"
+                login name branch)))
+    (catch Exception _)))               ; don't error on no git
 
 (defn doc-version
   [project]

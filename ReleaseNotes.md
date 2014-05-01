@@ -1,3 +1,7 @@
+## 0.1.15
+
+- Don't error building doc profile when no git
+
 ## 0.1.14
 
 - Make plugin work when there is no origin remote
