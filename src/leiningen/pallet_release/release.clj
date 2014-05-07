@@ -1,18 +1,23 @@
 (ns leiningen.pallet-release.release
   "Release a palletops project"
+  (:refer-clojure :exclude [test])
   (:require
    [clojure.java.io :refer [file resource]]
    [clojure.string :as string :refer [trim]]
+   [com.palletops.leinout.core :refer [deep-merge fail fail-on-error]]
+   [com.palletops.leinout.git :as git]
+   [com.palletops.leinout.git-flow :as git-flow]
+   [com.palletops.leinout.github :as github]
+   [com.palletops.leinout.lein :as lein]
+   [com.palletops.leinout.travis :as travis-api]
    [fipp.edn :refer [pprint]]
    [leiningen.core.eval :as eval]
    [leiningen.core.main :refer [info]]
-   [leiningen.pallet-release.core
-    :refer [deep-merge fail fail-on-error release-notes]]
-   [leiningen.pallet-release.git :as git]
-   [leiningen.pallet-release.github :as github]
-   [leiningen.pallet-release.lein :as lein]
-   [leiningen.pallet-release.travis :as travis]
-   [leiningen.pallet-release.travis-api :as travis-api])
+   [leiningen.pallet-release.core :refer [release-notes]]
+   [leiningen.pallet-release.github
+    :refer [auth-builder repo-coordinates]]
+   [leiningen.pallet-release.lein :refer [test update-versions]]
+   [leiningen.pallet-release.travis :as travis])
   (:import
    java.io.File))
 
@@ -25,7 +30,7 @@
   "Return a pallet release configuration map"
   [project origin]
   {:url (or (-> project :pallet-release :url)
-            (github/repo-coordinates origin))
+            (repo-coordinates origin))
    :branch (or (-> project :pallet-release :branch)
                "master")})
 
@@ -50,11 +55,11 @@
   (when-not (and token (= 40 (count token)))
     (fail "init expects a 40 character github token to be used to push."))
   (git/ensure-origin)
-  (git/ensure-git-flow)
+  (git-flow/ensure-git-flow)
   (add-release-notes-md)
   (let [origin (git/origin)]
     (lein-init project origin)
-    (github/auth-builder origin (github/github-login)))
+    (auth-builder origin (github/github-login)))
   (travis/init project token)
   (println "Next:")
   (println
@@ -66,7 +71,7 @@
   "Authorise builder on github"
   [project _]
   (let [origin (git/origin)]
-    (pprint (github/auth-builder origin (github/github-login)))
+    (pprint (auth-builder origin (github/github-login)))
     (flush)))
 
 (defn update-release-notes
@@ -87,11 +92,11 @@
   [project old-version new-version]
   {:pre [(map? project) old-version new-version]}
   (lein/clean project)
-  (lein/test project)
+  (test project)
   (lein/check project)
   (println)
-  (git/release-start new-version)
-  (lein/update-versions project old-version new-version)
+  (git-flow/release-start new-version)
+  (update-versions project old-version new-version)
   (lein/pom project) ; checks for snapshot dependencies
   (update-release-notes old-version new-version)
   (spit ".pallet-release" new-version)
@@ -140,7 +145,7 @@
   (let [new-version (new-version)
         current-branch (git/current-branch)]
     (lein/clean project)
-    (lein/test project)
+    (test project)
     (git/add "-u")
     (git/commit
      (str "Updated project.clj, release notes and readme for " new-version))

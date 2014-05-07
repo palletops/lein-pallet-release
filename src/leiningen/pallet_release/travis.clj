@@ -1,22 +1,18 @@
 (ns leiningen.pallet-release.travis
+  "Tasks for running on travis."
   (:require
    [clojure.string :as string :refer [blank?]]
    [clojure.java.io :refer [file resource]]
+   [com.palletops.leinout.core :refer [fail fail-on-error]]
+   [com.palletops.leinout.git :as git]
+   [com.palletops.leinout.travis :as travis]
    [leiningen.core.eval :as eval]
    [leiningen.core.main :refer [debug info]]
-   [leiningen.pallet-release.core
-    :refer [fail fail-on-error release-notes]]
-   [leiningen.pallet-release.git :as git]
+   [leiningen.pallet-release.core :refer [release-notes]]
    [leiningen.pallet-release.github :as github]
    [leiningen.pallet-release.lein :as lein])
   (:import
    java.io.File))
-
-(defn ^File travis-yml-file
-  "Return the travis.yml file."
-  [project]
-  {:pre [(map? project) (:root project)]}
-  (file (:root project) ".travis.yml"))
 
 (defn create-travis-yml
   "Write the .travis.yml file."
@@ -37,7 +33,7 @@
   "Initialise the project for travis."
   [project token]
   (enable project)
-  (let [f (travis-yml-file project)]
+  (let [f (travis/travis-yml-file project)]
     (when-not (.exists f)
       (info "Writing" (.getPath f))
       (create-travis-yml project f)
