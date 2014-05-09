@@ -1,3 +1,7 @@
+## 0.1.17
+
+- Fix publish command brocken in leinout refactoring
+
 ## 0.1.16
 
 - Fix branch name used to push in finish
