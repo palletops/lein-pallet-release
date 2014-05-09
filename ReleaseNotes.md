@@ -1,3 +1,9 @@
+## 0.1.16
+
+- Fix branch name used to push in finish
+
+- Factor out leinout lib
+
 ## 0.1.15
 
 - Don't error building doc profile when no git
