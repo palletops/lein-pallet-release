@@ -2,7 +2,7 @@
   "Pallet release commands to support the PalletOps release workflow."
   (:require
    [clojure.java.io :refer [input-stream resource]]
-   [leiningen.pallet-release.core :refer [fail]]
+   [com.palletops.leinout.core :refer [fail]]
    [leiningen.pallet-release.release :as release]
    [leiningen.pallet-release.travis :as travis]))
 

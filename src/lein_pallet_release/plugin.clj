@@ -2,8 +2,8 @@
   (:require
    [clojure.string :refer [join split]]
    [leiningen.core.project :refer [add-profiles]]
-   [leiningen.pallet-release.git :as git]
-   [leiningen.pallet-release.github :as github]))
+   [com.palletops.leinout.git :as git]
+   [com.palletops.leinout.github :as github]))
 
 (defn src-uri
   [project]
