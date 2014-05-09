@@ -161,4 +161,4 @@
   (git/checkout "master")
   (git/pull)
   (lein/clean project)
-  (lein/deploy project))
+  (lein/deploy project "clojars"))
