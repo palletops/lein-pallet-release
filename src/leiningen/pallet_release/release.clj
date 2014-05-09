@@ -142,14 +142,13 @@
 (defn finish
   "Finish a PalletOps release"
   [project args]
-  (let [new-version (new-version)
-        current-branch (git/current-branch)]
+  (let [new-version (new-version)]
     (lein/clean project)
     (test project)
     (git/add "-u")
     (git/commit
      (str "Updated project.clj, release notes and readme for " new-version))
-    (git/push "origin" current-branch)
+    (git/push "origin" (git/current-branch))
     (.delete (file ".pallet-release"))
     (println
      "Wait for travis to push to master,\n"
