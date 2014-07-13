@@ -8,7 +8,7 @@
 (defn auth-builder
   "Ensure the build-automation team is authorised on the repository."
   [url token]
-  (let [{:keys [login name] :as repo} (github/url->repo url token)]
+  (let [{:keys [login name] :as repo} (github/url->repo url)]
     (if-let [builder-id (github/team-id "build-automation" login token)]
       (let [r (github/auth-team-id builder-id repo token)]
         (case  r
