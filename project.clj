@@ -1,4 +1,4 @@
-(defproject lein-pallet-release "0.1.19-SNAPSHOT"
+(defproject lein-pallet-release "0.1.19"
   :description "A leiningen plugin for the PalletOps release workflow"
   :url "http://github.com/palletops/lein-pallet-release"
   :license {:name "Eclipse Public License"
