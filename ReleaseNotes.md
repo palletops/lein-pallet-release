@@ -1,3 +1,7 @@
+## 0.1.18
+
+- Fix bug in init from leinout refactoring
+
 ## 0.1.17
 
 - Fix publish command brocken in leinout refactoring
