@@ -1,3 +1,7 @@
+## 0.1.19
+
+- Update to leinout 0.1.1
+
 ## 0.1.18
 
 - Fix bug in init from leinout refactoring
