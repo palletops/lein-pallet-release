@@ -16,7 +16,7 @@
    [leiningen.pallet-release.core :refer [release-notes]]
    [leiningen.pallet-release.github
     :refer [auth-builder repo-coordinates]]
-   [leiningen.pallet-release.lein :refer [test update-versions]]
+   [leiningen.pallet-release.lein :refer [check test update-versions]]
    [leiningen.pallet-release.travis :as travis])
   (:import
    java.io.File))
@@ -93,7 +93,7 @@
   {:pre [(map? project) old-version new-version]}
   (lein/clean project)
   (test project)
-  (lein/check project)
+  (check project)
   (println)
   (git-flow/release-start new-version)
   (update-versions project old-version new-version)

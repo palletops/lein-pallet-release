@@ -17,6 +17,11 @@
   (debug "lein test")
   (task project "with-profile" "+no-checkouts" "test"))
 
+(defn check
+  [project]
+  (debug "lein check")
+  (task project "with-profile" "+no-checkouts" "check"))
+
 (defn update-versions
   [project old-version new-version]
   (debug "lein set-version" new-version)
