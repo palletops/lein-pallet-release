@@ -1,3 +1,10 @@
+## 0.1.20
+
+- Update to leinout 0.1.2
+  Ensure lein tasks are run respecting project aliases.
+
+- Run check without checkouts
+
 ## 0.1.19
 
 - Update to leinout 0.1.1
