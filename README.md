@@ -86,6 +86,13 @@ You can specify the url and branch travis should push to on the
                  :branch "master"}
 ```
 
+## Building Docs
+
+```
+lein with-profile +doc doc
+```
+
+
 ## License
 
 Copyright © 2014 Hugo Duncan, Antoni Batchelli
