@@ -14,7 +14,7 @@ and pushed to clojars.
 Add the plugin to your `:user` `:plugins` in `~/.lein/profiles.clj`:
 
 ```clj
-:plugins [[lein-pallet-release "0.1.20"]]
+:plugins [[lein-pallet-release "0.1.21"]]
 ```
 Install the
 [travis command line](http://blog.travis-ci.com/2013-01-14-new-client/).
