@@ -1,3 +1,8 @@
+## 0.1.21
+
+- Update to leinout 0.1.3
+  Fixes for changes in how leiningen treats stdout from shell commands.
+
 ## 0.1.20
 
 - Update to leinout 0.1.2
